@@ -1,7 +1,11 @@
 use std::cmp::min;
+use std::fmt::Debug;
+use std::ops::{Add, Div, Mul, Sub};
 
 
-fn factorization(a: &mut [f64], nn: i32, maxa: &[i32])
+pub fn factorization<V>(a: &mut [V], nn: i64, maxa: &[i64]) -> Result<(), String>
+    where V: Copy + Debug + From<f32> + PartialOrd + Div<Output=V> + Mul<Output=V> + Add<Output=V> +
+             Sub<Output=V>
 {
     for n in 0..nn
     {
@@ -11,13 +15,12 @@ fn factorization(a: &mut [f64], nn: i32, maxa: &[i32])
         let kh = ku - kl;
         if kh < 0
         {
-            if  a[kn as usize] <= 0f64
+            if  a[kn as usize] <= V::from(0f32)
             {
-                let error_message = &format!("STOP - STIFFNESS MATRIX NOT POSITIVE \
+                let error_message = format!("STOP - STIFFNESS MATRIX NOT POSITIVE \
                     DEFINITE, NONPOSITIVE PIVOT FOR EQUATION {:?}, PIVOT = {:?}",
                     n, a[kn as usize]);
-                println!("{}", error_message);
-                return;
+                return Err(error_message);
             }
             else
             {
@@ -27,7 +30,7 @@ fn factorization(a: &mut [f64], nn: i32, maxa: &[i32])
         else if kh == 0
         {
             let mut k = n;
-            let mut b = 0f64;
+            let mut b = V::from(0f32);
             for kk in kl..=ku
             {
                 k = k - 1;
@@ -38,13 +41,12 @@ fn factorization(a: &mut [f64], nn: i32, maxa: &[i32])
             }
             a[kn as usize] = a[kn as usize] - b;
 
-            if  a[kn as usize] <= 0f64
+            if  a[kn as usize] <= V::from(0f32)
             {
-                let error_message = &format!("STOP - STIFFNESS MATRIX NOT POSITIVE \
+                let error_message = format!("STOP - STIFFNESS MATRIX NOT POSITIVE \
                     DEFINITE, NONPOSITIVE PIVOT FOR EQUATION {:?}, PIVOT = {:?}",
                     n, a[kn as usize]);
-                println!("{}", error_message);
-                return;
+                return Err(error_message);
             }
             else
             {
@@ -69,7 +71,7 @@ fn factorization(a: &mut [f64], nn: i32, maxa: &[i32])
                 else
                 {
                     let kk = min(ic, nd);
-                    let mut c = 0.0;
+                    let mut c = V::from(0f32);
                     for l in 1..=kk
                     {
                         c = c + a[(ki + l) as usize] * a[(klt + l) as usize];
@@ -79,7 +81,7 @@ fn factorization(a: &mut [f64], nn: i32, maxa: &[i32])
                     k = k + 1;
 
                     let mut k = n;
-                    let mut b = 0f64;
+                    let mut b = V::from(0f32);
                     for kk in kl..=ku
                     {
                         k = k - 1;
@@ -90,13 +92,12 @@ fn factorization(a: &mut [f64], nn: i32, maxa: &[i32])
                     }
                     a[kn as usize] = a[kn as usize] - b;
 
-                    if  a[kn as usize] <= 0f64
+                    if  a[kn as usize] <= V::from(0f32)
                     {
-                        let error_message = &format!("STOP - STIFFNESS MATRIX NOT POSITIVE \
+                        let error_message = format!("STOP - STIFFNESS MATRIX NOT POSITIVE \
                             DEFINITE, NONPOSITIVE PIVOT FOR EQUATION {:?}, PIVOT = {:?}",
                             n, a[kn as usize]);
-                        println!("{}", error_message);
-                        return;
+                        return Err(error_message);
                     }
                     else
                     {
@@ -109,12 +110,14 @@ fn factorization(a: &mut [f64], nn: i32, maxa: &[i32])
         }
         continue;
     }
+    Ok(())
 }
 
 
-fn find_displacements(a: &[f64], v: &mut[f64], nn: i32, maxa: &[i32])
+pub fn find_unknown<V>(a: &[V], v: &mut[V], nn: i64, maxa: &[i64])
+    where V: Copy + Mul<Output=V> + Add<Output=V> + Sub<Output=V> + Div<Output=V> + From<f32>
 {
-    // reduce rhs load vector
+    // reduce rhs vector
 
     for n in 0..nn
     {
@@ -127,7 +130,7 @@ fn find_displacements(a: &[f64], v: &mut[f64], nn: i32, maxa: &[i32])
         else
         {
             let mut k = n;
-            let mut c = 0.0;
+            let mut c = V::from(0f32);
             for kk in kl..=ku
             {
                 k = k - 1;
@@ -172,19 +175,4 @@ fn find_displacements(a: &[f64], v: &mut[f64], nn: i32, maxa: &[i32])
             n = n - 1;
         }
     }
-
-
-}
-
-
-fn main()
-{
-    let nn = 4i32;
-    let mut a = vec![5.0, 6.0, -4.0, 6.0, -4.0, 1.0, 5.0, -4.0, 1.0];
-    let maxa = vec![0i32, 1, 3, 6, 9];
-    let mut v = vec![0.0, 1.0, 0.0, 0.0];
-    factorization(&mut a, nn, &maxa);
-    println!("a: {:?}", a);
-    find_displacements(&a, &mut v, nn, &maxa);
-    println!("v: {:?}", v);
 }
