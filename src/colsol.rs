@@ -40,6 +40,8 @@ pub fn factorization<V>(a: &mut [V], nn: i64, maxa: &[i64]) -> Result<(), String
                 a[kk as usize] = c;
             }
             a[kn as usize] = a[kn as usize] - b;
+            // return Ok(())
+            // continue;
         }
         else
         {
@@ -66,8 +68,10 @@ pub fn factorization<V>(a: &mut [V], nn: i64, maxa: &[i64]) -> Result<(), String
                         c = c + a[(ki + l) as usize] * a[(klt + l) as usize];
                     }
                     a[klt as usize] = a[klt as usize] - c;
+                    k = k + 1;
+                    continue;
                 }
-                k = k + 1;
+                // k = k + 1;
             }
 
             let mut b = V::from(0f32);
@@ -80,7 +84,8 @@ pub fn factorization<V>(a: &mut [V], nn: i64, maxa: &[i64]) -> Result<(), String
                 a[kk as usize] = c;
             }
             a[kn as usize] = a[kn as usize] - b;
-            return Ok(());
+            // return Ok(());
+            // continue;
         }
         continue;
     }
@@ -130,7 +135,7 @@ pub fn find_unknown<V>(a: &[V], v: &mut[V], nn: i64, maxa: &[i64])
     }
     let mut n = nn - 1;
 
-    for l in 1..=nn
+    for _l in 1..=nn
     {
         let kl = maxa[n as usize] + 1;
         let ku = maxa[(n + 1) as usize] - 1;
