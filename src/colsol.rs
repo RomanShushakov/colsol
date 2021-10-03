@@ -40,18 +40,6 @@ pub fn factorization<V>(a: &mut [V], nn: i64, maxa: &[i64]) -> Result<(), String
                 a[kk as usize] = c;
             }
             a[kn as usize] = a[kn as usize] - b;
-
-            if  a[kn as usize] <= V::from(0f32)
-            {
-                let error_message = format!("STOP - STIFFNESS MATRIX NOT POSITIVE \
-                    DEFINITE, NONPOSITIVE PIVOT FOR EQUATION {:?}, PIVOT = {:?}",
-                    n, a[kn as usize]);
-                return Err(error_message);
-            }
-            else
-            {
-                continue;
-            }
         }
         else
         {
@@ -64,10 +52,10 @@ pub fn factorization<V>(a: &mut [V], nn: i64, maxa: &[i64]) -> Result<(), String
                 klt = klt - 1;
                 let ki = maxa[k as usize];
                 let nd = maxa[(k + 1) as usize] - ki - 1;
-
                 if nd <= 0
                 {
                     k = k + 1;
+                    continue;
                 }
                 else
                 {
@@ -92,20 +80,9 @@ pub fn factorization<V>(a: &mut [V], nn: i64, maxa: &[i64]) -> Result<(), String
                 a[kk as usize] = c;
             }
             a[kn as usize] = a[kn as usize] - b;
-
-            if  a[kn as usize] <= V::from(0f32)
-            {
-                let error_message = format!("STOP - STIFFNESS MATRIX NOT POSITIVE \
-                    DEFINITE, NONPOSITIVE PIVOT FOR EQUATION {:?}, PIVOT = {:?}",
-                    n, a[kn as usize]);
-                return Err(error_message);
-            }
-            else
-            {
-                continue;
-            }
+            return Ok(());
         }
-        // unreachable continue;
+        continue;
     }
     Ok(())
 }
