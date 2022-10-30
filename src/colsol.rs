@@ -40,8 +40,6 @@ pub fn factorization<V>(a: &mut [V], nn: i64, maxa: &[i64]) -> Result<(), String
                 a[kk as usize] = c;
             }
             a[kn as usize] = a[kn as usize] - b;
-            // return Ok(())
-            // continue;
         }
         else
         {
@@ -71,7 +69,6 @@ pub fn factorization<V>(a: &mut [V], nn: i64, maxa: &[i64]) -> Result<(), String
                     k = k + 1;
                     continue;
                 }
-                // k = k + 1;
             }
 
             let mut b = V::from(0f32);
@@ -84,8 +81,6 @@ pub fn factorization<V>(a: &mut [V], nn: i64, maxa: &[i64]) -> Result<(), String
                 a[kk as usize] = c;
             }
             a[kn as usize] = a[kn as usize] - b;
-            // return Ok(());
-            // continue;
         }
         continue;
     }
