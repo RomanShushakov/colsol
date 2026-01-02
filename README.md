@@ -68,19 +68,19 @@ solver techniques.
 
 ## Input Variables
 
-- **A** — stiffness matrix stored in compact (profile/skyline) form  
-- **NN** — number of equations  
+- **A** — stiffness matrix stored in compact (profile/skyline) form
+- **NN** — number of equations
 - **MAXA** — vector containing addresses of diagonal elements of the stiffness
-  matrix in **A**  
-- **V** — right-hand side (load) vector  
+  matrix in **A**
+- **V** — right-hand side (load) vector
 
 ---
 
 ## Output Variables
 
 - **A** — modified in place to store **D** and **L** factors of the stiffness
-  matrix  
-- **V** — displacement (solution) vector  
+  matrix
+- **V** — displacement (solution) vector
 
 ---
 
@@ -97,3 +97,9 @@ engineering and finite-element codes.
 
 This project is primarily intended for learning, experimentation, and as part
 of a broader numerical computing portfolio.
+
+---
+
+## License
+
+MIT (see `LICENSE`).
